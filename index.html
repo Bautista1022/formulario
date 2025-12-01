@@ -641,7 +641,7 @@
     <h2 class="section-title">Hablemos de tu proyecto</h2>
     
     <div class="formulario">
-      <form method="POST" action= "https://script.google.com/macros/s/AKfycbzJXRCu3UbOWO0-tpZwwh0gJNlFA1pcFYpFttvEOQ8S1Xl1wT2oUariWaC4CbszfJLG/exec">
+      <form name="submit-to-google-sheet">
         <label for="nombre">Nombre:</label>
         <input type="text" id="nombre" name="usuario_nombre" placeholder="Nombre o Nombres" required>
         
@@ -708,5 +708,41 @@
       <p>© 2025 Amicis Bautista | ADBA Design. Todos los derechos reservados.</p>
     </div>
   </footer>
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzJXRCu3UbOWO0-tpZwwh0gJNlFA1pcFYpFttvEOQ8S1Xl1wT2oUariWaC4CbszfJLG/exec'
+    const form = document.forms['submit-to-google-sheet']
+    const btnEnviar = form.querySelector('button[type="submit"]')
+
+    form.addEventListener('submit', e => {
+      e.preventDefault() // 1. Evita que el navegador vaya a la página blanca
+      
+      // Indicador visual de carga (opcional pero recomendado)
+      const textoOriginal = btnEnviar.innerText;
+      btnEnviar.innerText = "Enviando...";
+      btnEnviar.disabled = true;
+
+      fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+        .then(response => {
+            // 2. Aquí manejamos el éxito
+            alert("¡Gracias! Tu mensaje ha sido enviado correctamente.")
+            form.reset() // Limpia el formulario
+            
+            // Restaurar botón
+            btnEnviar.innerText = textoOriginal;
+            btnEnviar.disabled = false;
+        })
+        .catch(error => {
+            // 3. Aquí manejamos errores
+            console.error('Error!', error.message)
+            alert("Hubo un error al enviar. Por favor intenta de nuevo.")
+            
+            // Restaurar botón
+            btnEnviar.innerText = textoOriginal;
+            btnEnviar.disabled = false;
+        })
+    })
+  </script>
+</body>
+</html>
 </body>
 </html>
